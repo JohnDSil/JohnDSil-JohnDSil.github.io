@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Web Responsive</title>
+    <title>Página Web Responsive con Menú Hamburguesa</title>
     <style>
         /* Reseteo básico */
         * {
@@ -47,6 +47,7 @@
             color: white;
             padding: 1rem 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
         }
 
         header .container {
@@ -60,30 +61,73 @@
             font-weight: bold;
         }
 
-        .toggle-menu {
-            display: none;
+        /* Estilo para el botón de hamburguesa */
+        .hamburger {
+            display: block;
             background: none;
             border: none;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger.active {
+            transform: rotate(90deg);
+        }
+
+        /* Estilo base para el menú de navegación */
+        nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 250px;
+            height: 100vh;
+            background-color: var(--primary-color);
+            z-index: 999;
+            transition: right 0.3s ease;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            padding-top: 70px;
+        }
+
+        nav.active {
+            right: 0;
         }
 
         nav ul {
-            display: flex;
             list-style: none;
-            gap: 20px;
+            padding: 0;
         }
 
         nav a {
+            display: block;
             color: white;
             text-decoration: none;
+            padding: 15px 25px;
             font-weight: 500;
-            transition: opacity 0.3s;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: background-color 0.3s;
         }
 
         nav a:hover {
-            opacity: 0.8;
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        /* Overlay para cerrar el menú al hacer clic fuera */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 998;
+            display: none;
+        }
+
+        .menu-overlay.active {
+            display: block;
         }
 
         .hero {
@@ -285,53 +329,9 @@
             color: white;
             cursor: pointer;
             font-size: 1.5rem;
-            margin-left: 15px;
-        }
-
-        /* Estilos para dispositivos móviles */
-        @media (max-width: 768px) {
-            .toggle-menu {
-                display: block;
-            }
-
-            nav {
-                position: absolute;
-                top: 70px;
-                left: 0;
-                right: 0;
-                background-color: var(--primary-color);
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.3s ease;
-            }
-
-            nav.active {
-                max-height: 300px;
-            }
-
-            nav ul {
-                flex-direction: column;
-                gap: 0;
-                padding: 0;
-            }
-
-            nav ul li {
-                width: 100%;
-            }
-
-            nav a {
-                display: block;
-                padding: 15px;
-                border-top: 1px solid rgba(255,255,255,0.1);
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
+            position: absolute;
+            top: 20px;
+            right: 80px;
         }
     </style>
 </head>
@@ -339,18 +339,21 @@
     <header>
         <div class="container">
             <div class="logo">MiSitioWeb</div>
-            <button class="toggle-menu" aria-label="Menú de navegación">☰</button>
-            <nav id="main-nav">
-                <ul>
-                    <li><a href="#inicio">Inicio</a></li>
-                    <li><a href="#caracteristicas">Características</a></li>
-                    <li><a href="#testimonios">Testimonios</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
-                </ul>
-            </nav>
             <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">🌙</button>
+            <button class="hamburger" id="hamburger" aria-label="Menú de navegación">☰</button>
         </div>
     </header>
+
+    <nav id="main-nav">
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#caracteristicas">Características</a></li>
+            <li><a href="#testimonios">Testimonios</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+        </ul>
+    </nav>
+    
+    <div class="menu-overlay" id="menu-overlay"></div>
 
     <section class="hero" id="inicio">
         <div class="container">
@@ -437,8 +440,9 @@
 
     <script>
         // Selección de elementos
-        const toggleMenu = document.querySelector('.toggle-menu');
+        const hamburger = document.getElementById('hamburger');
         const nav = document.getElementById('main-nav');
+        const menuOverlay = document.getElementById('menu-overlay');
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
         const contactForm = document.getElementById('contact-form');
@@ -446,9 +450,31 @@
         const nextButton = document.querySelector('.carousel-button.next');
         const slides = document.querySelectorAll('.testimonial-slide');
         
-        // Control del menú móvil
-        toggleMenu.addEventListener('click', () => {
+        // Control del menú hamburguesa
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
             nav.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            // Prevenir scroll cuando el menú está abierto
+            document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        // Cerrar el menú al hacer clic en el overlay
+        menuOverlay.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            nav.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+        
+        // Cerrar el menú al hacer clic en un enlace
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                nav.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
         });
         
         // Modo oscuro
@@ -504,24 +530,4 @@
         });
         
         // Scroll suave para los enlaces del menú
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    // Cerrar el menú móvil si está abierto
-                    nav.classList.remove('active');
-                    
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 70,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+        document.querySelectorAll('a[href^="#
