@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Web Responsive</title>
+    <style>
+        /* Reseteo básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Variables CSS */
+        :root {
+            --primary-color: #3a86ff;
+            --secondary-color: #8338ec;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --dark-bg: #212529;
+        }
+
+        body {
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--light-bg);
+            transition: background-color 0.3s ease;
+        }
+
+        /* Modo oscuro */
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: #fff;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .toggle-menu {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .hero {
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s, background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            background-color: #7030c0;
+        }
+
+        .features {
+            padding: 3rem 0;
+            background-color: #fff;
+        }
+
+        .dark-mode .features {
+            background-color: #2d3238;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .dark-mode .feature-card {
+            background-color: #333;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .testimonials {
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .testimonial-carousel {
+            margin-top: 2rem;
+            padding: 0 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial-slide {
+            display: none;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .testimonial-slide.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .testimonial-content {
+            font-style: italic;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .testimonial-author {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .carousel-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .carousel-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .contact {
+            padding: 3rem 0;
+            background-color: #f0f0f0;
+        }
+
+        .dark-mode .contact {
+            background-color: #2a2a2a;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .dark-mode .form-control {
+            background-color: #333;
+            color: white;
+            border-color: #555;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        footer {
+            background-color: var(--dark-bg);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.5rem;
+            margin-left: 15px;
+        }
+
+        /* Estilos para dispositivos móviles */
+        @media (max-width: 768px) {
+            .toggle-menu {
+                display: block;
+            }
+
+            nav {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background-color: var(--primary-color);
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            nav.active {
+                max-height: 300px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 0;
+                padding: 0;
+            }
+
+            nav ul li {
+                width: 100%;
+            }
+
+            nav a {
+                display: block;
+                padding: 15px;
+                border-top: 1px solid rgba(255,255,255,0.1);
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">MiSitioWeb</div>
+            <button class="toggle-menu" aria-label="Menú de navegación">☰</button>
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#caracteristicas">Características</a></li>
+                    <li><a href="#testimonios">Testimonios</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">🌙</button>
+        </div>
+    </header>
+
+    <section class="hero" id="inicio">
+        <div class="container">
+            <h1>Soluciones Digitales Innovadoras</h1>
+            <p>Diseñamos experiencias web modernas, responsive y accesibles para todo tipo de dispositivos. 
+               Nuestras soluciones están optimizadas para un rendimiento excepcional.</p>
+            <a href="#contacto" class="cta-button">¡Comienza ahora!</a>
+        </div>
+    </section>
+
+    <section class="features" id="caracteristicas">
+        <div class="container">
+            <h2>Nuestras Características</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Totalmente Responsive</h3>
+                    <p>Nuestra web se adapta perfectamente a cualquier tamaño de pantalla y dispositivo.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Rápido Rendimiento</h3>
+                    <p>Optimizado para cargar rápidamente en cualquier conexión, mejorando la experiencia del usuario.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Seguro y Confiable</h3>
+                    <p>Implementamos las mejores prácticas de seguridad para proteger tu información.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials" id="testimonios">
+        <div class="container">
+            <h2>Lo que dicen nuestros clientes</h2>
+            <div class="testimonial-carousel">
+                <div class="testimonial-slide active" id="slide1">
+                    <p class="testimonial-content">"El servicio superó todas mis expectativas. El sitio web es exactamente lo que necesitaba para mi negocio."</p>
+                    <p class="testimonial-author">- Ana Rodríguez</p>
+                </div>
+                <div class="testimonial-slide" id="slide2">
+                    <p class="testimonial-content">"Excelente atención y un trabajo impecable. Mi sitio web nunca había funcionado tan bien."</p>
+                    <p class="testimonial-author">- Carlos Martínez</p>
+                </div>
+                <div class="testimonial-slide" id="slide3">
+                    <p class="testimonial-content">"Profesionales en todo sentido, crearon una web que representa perfectamente a mi marca."</p>
+                    <p class="testimonial-author">- Laura Gómez</p>
+                </div>
+                <div class="carousel-controls">
+                    <button class="carousel-button prev" aria-label="Testimonio anterior">❮</button>
+                    <button class="carousel-button next" aria-label="Testimonio siguiente">❯</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contacto">
+        <div class="container">
+            <h2>Contacta con nosotros</h2>
+            <form class="contact-form" id="contact-form">
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Mensaje</label>
+                    <textarea id="message" class="form-control" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="cta-button">Enviar Mensaje</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 MiSitioWeb. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Selección de elementos
+        const toggleMenu = document.querySelector('.toggle-menu');
+        const nav = document.getElementById('main-nav');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const contactForm = document.getElementById('contact-form');
+        const prevButton = document.querySelector('.carousel-button.prev');
+        const nextButton = document.querySelector('.carousel-button.next');
+        const slides = document.querySelectorAll('.testimonial-slide');
+        
+        // Control del menú móvil
+        toggleMenu.addEventListener('click', () => {
+            nav.classList.toggle('active');
+        });
+        
+        // Modo oscuro
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            themeToggle.textContent = body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        });
+        
+        // Carrusel de testimonios
+        let currentSlide = 0;
+        
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            
+            if (index < 0) {
+                currentSlide = slides.length - 1;
+            } else if (index >= slides.length) {
+                currentSlide = 0;
+            } else {
+                currentSlide = index;
+            }
+            
+            slides[currentSlide].classList.add('active');
+        }
+        
+        prevButton.addEventListener('click', () => {
+            showSlide(currentSlide - 1);
+        });
+        
+        nextButton.addEventListener('click', () => {
+            showSlide(currentSlide + 1);
+        });
+        
+        // Cambio automático de testimonios
+        setInterval(() => {
+            showSlide(currentSlide + 1);
+        }, 5000);
+        
+        // Manejo del formulario de contacto
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            if (name && email && message) {
+                // Aquí normalmente enviarías los datos a un servidor
+                alert(`Gracias ${name}! Tu mensaje ha sido enviado correctamente.`);
+                contactForm.reset();
+            } else {
+                alert('Por favor completa todos los campos.');
+            }
+        });
+        
+        // Scroll suave para los enlaces del menú
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    // Cerrar el menú móvil si está abierto
+                    nav.classList.remove('active');
+                    
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
