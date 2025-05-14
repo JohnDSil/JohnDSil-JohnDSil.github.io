@@ -3,580 +3,483 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Web Responsive con Menú Hamburguesa</title>
-    <style>
-        /* Reseteo básico */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        /* Variables CSS */
-        :root {
-            --primary-color: #3a86ff;
-            --secondary-color: #8338ec;
-            --text-color: #333;
-            --light-bg: #f8f9fa;
-            --dark-bg: #212529;
-        }
-
-        body {
-            color: var(--text-color);
-            line-height: 1.6;
-            background-color: var(--light-bg);
-            transition: background-color 0.3s ease;
-        }
-
-        /* Modo oscuro */
-        body.dark-mode {
-            background-color: var(--dark-bg);
-            color: #fff;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: relative;
-        }
-
-        header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        /* Estilo para el botón de hamburguesa */
-        .hamburger {
-            display: block;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.8rem;
-            cursor: pointer;
-            z-index: 1000;
-            transition: transform 0.3s ease;
-        }
-
-        .hamburger.active {
-            transform: rotate(90deg);
-        }
-
-        /* Estilo base para el menú de navegación */
-        nav {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 250px;
-            height: 100vh;
-            background-color: var(--primary-color);
-            z-index: 999;
-            transition: right 0.3s ease;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-            padding-top: 70px;
-        }
-
-        nav.active {
-            right: 0;
-        }
-
-        nav ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        nav a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 15px 25px;
-            font-weight: 500;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            transition: background-color 0.3s;
-        }
-
-        nav a:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-
-        /* Overlay para cerrar el menú al hacer clic fuera */
-        .menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 998;
-            display: none;
-        }
-
-        .menu-overlay.active {
-            display: block;
-        }
-
-        .hero {
-            padding: 3rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto 2rem;
-        }
-
-        .cta-button {
-            display: inline-block;
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: transform 0.3s, background-color 0.3s;
-            border: none;
-            cursor: pointer;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            background-color: #7030c0;
-        }
-
-        .features {
-            padding: 3rem 0;
-            background-color: #fff;
-        }
-
-        .dark-mode .features {
-            background-color: #2d3238;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 2rem;
-        }
-
-        .feature-card {
-            background-color: var(--light-bg);
-            border-radius: 8px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-
-        .dark-mode .feature-card {
-            background-color: #333;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .feature-card h3 {
-            margin-bottom: 10px;
-            font-size: 1.5rem;
-        }
-
-        .testimonials {
-            padding: 3rem 0;
-            text-align: center;
-        }
-
-        .testimonial-carousel {
-            margin-top: 2rem;
-            padding: 0 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .testimonial-slide {
-            display: none;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .testimonial-slide.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .testimonial-content {
-            font-style: italic;
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-        }
-
-        .testimonial-author {
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        .carousel-controls {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .carousel-button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
-        }
-
-        .carousel-button:hover {
-            background-color: var(--secondary-color);
-        }
-
-        .contact {
-            padding: 3rem 0;
-            background-color: #f0f0f0;
-        }
-
-        .dark-mode .contact {
-            background-color: #2a2a2a;
-        }
-
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        .dark-mode .form-control {
-            background-color: #333;
-            color: white;
-            border-color: #555;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        footer {
-            background-color: var(--dark-bg);
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-        }
-
-        .theme-toggle {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 1.5rem;
-            position: absolute;
-            top: 20px;
-            right: 80px;
-        }
-    </style>
+    <meta name="description" content="RetroHub - Tu portal definitivo para emuladores y ROMs de videojuegos retro">
+    <meta name="keywords" content="emuladores, ROMs, retro, videojuegos, RetroArch, MAME, SNES">
+    <meta name="author" content="RetroHub">
+    <title>RetroHub - Emuladores y ROMs</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 <body>
+    <!-- Accesibilidad: Skip to main content -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+    <!-- Preloader -->
+    <div class="preloader" aria-hidden="true">
+        <div class="loader">
+            <span class="loading-text">Cargando</span>
+            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reproductor de Música Mejorado -->
+    <div class="music-player" aria-label="Reproductor de música retro">
+        <div class="player-header">
+            <div class="player-title">Música Retro</div>
+            <button class="player-toggle" aria-label="Mostrar/ocultar reproductor de música">
+                <i class="fas fa-minus minimize-player" aria-hidden="true"></i>
+                <i class="fas fa-music expand-player" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="player-content">
+            <div class="player-info">
+                <span class="track-title">RetroWave</span>
+            </div>
+            <div class="player-controls">
+                <button id="play-pause" class="control-button" aria-label="Reproducir o pausar música">
+                    <i class="fas fa-play" aria-hidden="true"></i>
+                </button>
+                <div class="volume-control">
+                    <i class="fas fa-volume-up" aria-hidden="true"></i>
+                    <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" aria-label="Control de volumen">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
     <header>
-        <div class="container">
-            <div class="logo">MiSitioWeb</div>
-            <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">🌙</button>
-            <button class="hamburger" id="hamburger" aria-label="Menú de navegación">☰</button>
+        <div class="logo">
+            <h1>RetroHub</h1>
+        </div>
+        <nav aria-label="Navegación principal">
+            <ul>
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#emulators">Emuladores</a></li>
+                <li><a href="#roms">ROMs</a></li>
+                <li><a href="#about">Acerca de</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+        </nav>
+        <div class="menu-toggle" aria-label="Abrir menú de navegación">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </div>
+        <div class="theme-toggle" aria-label="Cambiar tema claro/oscuro">
+            <i class="fas fa-moon" aria-hidden="true"></i>
         </div>
     </header>
 
-    <nav id="main-nav">
-        <ul>
-            <li><a href="#inicio">Inicio</a></li>
-            <li><a href="#caracteristicas">Características</a></li>
-            <li><a href="#testimonios">Testimonios</a></li>
-            <li><a href="#contacto">Contacto</a></li>
-        </ul>
-    </nav>
-    
-    <div class="menu-overlay" id="menu-overlay"></div>
-
-    <section class="hero" id="inicio">
-    
-    <div class="container" style="margin-top: 2rem;">
-    <h2>Demo en Video</h2>
-    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
-        <iframe src="https://www.youtube.com/embed/LnmjMV-zfO0" 
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen 
-                style="position: absolute; top:0; left: 0; width: 100%; height: 100%;">
-        </iframe>
-    </div>
-</div>
-
-        <div class="container">
-            <h1>Soluciones Digitales Innovadoras</h1>
-            <p>Diseñamos experiencias web modernas, responsive y accesibles para todo tipo de dispositivos. 
-               Nuestras soluciones están optimizadas para un rendimiento excepcional.</p>
-            <a href="#contacto" class="cta-button">¡Comienza ahora!</a>
-        </div>
-    </section>
-
-    <section class="features" id="caracteristicas">
-        <div class="container">
-            <h2>Nuestras Características</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">📱</div>
-                    <h3>Totalmente Responsive</h3>
-                    <p>Nuestra web se adapta perfectamente a cualquier tamaño de pantalla y dispositivo.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🚀</div>
-                    <h3>Rápido Rendimiento</h3>
-                    <p>Optimizado para cargar rápidamente en cualquier conexión, mejorando la experiencia del usuario.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>Seguro y Confiable</h3>
-                    <p>Implementamos las mejores prácticas de seguridad para proteger tu información.</p>
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h2 class="neon-text">Bienvenido a RetroHub</h2>
+                <p>Tu hub definitivo de emulación retro</p>
+                <div class="cta-buttons">
+                    <a href="#emulators" class="btn neon-btn">Emuladores</a>
+                    <a href="#roms" class="btn neon-btn">ROMs</a>
                 </div>
             </div>
-        </div>
-    </section>
+            <div class="hero-background">
+                <div class="pixel-grid"></div>
+            </div>
+        </section>
 
-    <section class="testimonials" id="testimonios">
-        <div class="container">
-            <h2>Lo que dicen nuestros clientes</h2>
-            <div class="testimonial-carousel">
-                <div class="testimonial-slide active" id="slide1">
-                    <p class="testimonial-content">"El servicio superó todas mis expectativas. El sitio web es exactamente lo que necesitaba para mi negocio."</p>
-                    <p class="testimonial-author">- Ana Rodríguez</p>
-                </div>
-                <div class="testimonial-slide" id="slide2">
-                    <p class="testimonial-content">"Excelente atención y un trabajo impecable. Mi sitio web nunca había funcionado tan bien."</p>
-                    <p class="testimonial-author">- Carlos Martínez</p>
-                </div>
-                <div class="testimonial-slide" id="slide3">
-                    <p class="testimonial-content">"Profesionales en todo sentido, crearon una web que representa perfectamente a mi marca."</p>
-                    <p class="testimonial-author">- Laura Gómez</p>
-                </div>
-                <div class="carousel-controls">
-                    <button class="carousel-button prev" aria-label="Testimonio anterior">❮</button>
-                    <button class="carousel-button next" aria-label="Testimonio siguiente">❯</button>
+        <!-- Emuladores Section -->
+        <section id="emulators" class="section">
+            <div class="section-header">
+                <h2 class="neon-text">Emuladores</h2>
+                <p class="section-description">Los mejores emuladores para disfrutar de tus juegos retro favoritos</p>
+            </div>
+            <div class="search-container">
+                <input type="text" id="emulator-search" placeholder="Buscar emuladores..." aria-label="Buscar emuladores">
+                <button class="search-btn" aria-label="Buscar"><i class="fas fa-search" aria-hidden="true"></i></button>
+            </div>
+            <div class="filter-container">
+                <select id="platform-filter" aria-label="Filtrar por plataforma">
+                    <option value="all">Todas las plataformas</option>
+                    <option value="arcade">Arcade</option>
+                    <option value="nintendo">Nintendo</option>
+                    <option value="playstation">PlayStation</option>
+                    <option value="sega">Sega</option>
+                </select>
+            </div>
+            <div class="grid-container" id="emulators-grid">
+                <!-- Emulador 1 -->
+                <article class="card" data-platform="multi">
+                    <div class="card-image">
+                        <img src="img/retroarch.jpg" alt="Screenshot del emulador RetroArch" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>RetroArch</h3>
+                        <p>Una interfaz frontend para emuladores, motores de juegos y reproductores multimedia.</p>
+                        <div class="compatibility">
+                            <span class="platform-tag">Multi-plataforma</span>
+                        </div>
+                        <a href="https://www.retroarch.com/" target="_blank" rel="noopener noreferrer" class="btn neon-btn">Sitio Oficial</a>
+                    </div>
+                </article>
+                
+                <!-- Emulador 2 -->
+                <article class="card" data-platform="nintendo">
+                    <div class="card-image">
+                        <img src="img/dolphin.jpg" alt="Screenshot del emulador Dolphin" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>Dolphin</h3>
+                        <p>Emulador de GameCube y Wii para PC.</p>
+                        <div class="compatibility">
+                            <span class="platform-tag">GameCube</span>
+                            <span class="platform-tag">Wii</span>
+                        </div>
+                        <a href="https://dolphin-emu.org/" target="_blank" rel="noopener noreferrer" class="btn neon-btn">Sitio Oficial</a>
+                    </div>
+                </article>
+                
+                <!-- Emulador 3 -->
+                <article class="card" data-platform="playstation">
+                    <div class="card-image">
+                        <img src="img/ppsspp.jpg" alt="Screenshot del emulador PPSSPP" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>PPSSPP</h3>
+                        <p>Emulador de PSP para múltiples plataformas.</p>
+                        <div class="compatibility">
+                            <span class="platform-tag">PSP</span>
+                        </div>
+                        <a href="https://www.ppsspp.org/" target="_blank" rel="noopener noreferrer" class="btn neon-btn">Sitio Oficial</a>
+                    </div>
+                </article>
+                
+                <!-- Emulador 4 -->
+                <article class="card" data-platform="playstation">
+                    <div class="card-image">
+                        <img src="img/pcsx2.jpg" alt="Screenshot del emulador PCSX2" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>PCSX2</h3>
+                        <p>Emulador de PlayStation 2 para PC.</p>
+                        <div class="compatibility">
+                            <span class="platform-tag">PlayStation 2</span>
+                        </div>
+                        <a href="https://pcsx2.net/" target="_blank" rel="noopener noreferrer" class="btn neon-btn">Sitio Oficial</a>
+                    </div>
+                </article>
+                
+                <!-- Emulador 5 -->
+                <article class="card" data-platform="arcade">
+                    <div class="card-image">
+                        <img src="img/mame.jpg" alt="Screenshot del emulador MAME" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>MAME</h3>
+                        <p>Multiple Arcade Machine Emulator.</p>
+                        <div class="compatibility">
+                            <span class="platform-tag">Arcade</span>
+                        </div>
+                        <a href="https://www.mamedev.org/" target="_blank" rel="noopener noreferrer" class="btn neon-btn">Sitio Oficial</a>
+                    </div>
+                </article>
+                
+                <!-- Emulador 6 -->
+                <article class="card" data-platform="nintendo">
+                    <div class="card-image">
+                        <img src="img/snes9x.jpg" alt="Screenshot del emulador Snes9x" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>Snes9x</h3>
+                        <p>Emulador de Super Nintendo.</p>
+                        <div class="compatibility">
+                            <span class="platform-tag">SNES</span>
+                        </div>
+                        <a href="https://www.snes9x.com/" target="_blank" rel="noopener noreferrer" class="btn neon-btn">Sitio Oficial</a>
+                    </div>
+                </article>
+            </div>
+            <div class="load-more">
+                <button class="btn neon-btn" id="load-more-emulators">Cargar más</button>
+            </div>
+        </section>
+
+        <!-- ROMs Section -->
+        <section id="roms" class="section">
+            <div class="section-header">
+                <h2 class="neon-text">Repositorios de ROMs</h2>
+                <p class="section-description">Recursos para encontrar juegos clásicos de manera legal</p>
+            </div>
+            <div class="disclaimer-box">
+                <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                <p>Recordatorio: Descarga solamente ROMs de juegos que poseas físicamente o que sean de dominio público para cumplir con las leyes de copyright.</p>
+            </div>
+            <div class="grid-container">
+                <!-- ROM Repository 1 -->
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/archive.jpg" alt="Screenshot de Internet Archive" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>Internet Archive</h3>
+                        <p>Colección de software y juegos clásicos para preservación histórica.</p>
+                        <div class="tags">
+                            <span class="tag">Dominio Público</span>
+                            <span class="tag">Abandonware</span>
+                        </div>
+                        <a href="https://archive.org/details/softwarelibrary_msdos_games" target="_blank" rel="noopener noreferrer" class="btn neon-btn">Visitar</a>
+                    </div>
+                </article>
+                
+                <!-- ROM Repository 2 -->
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/vimms.jpg" alt="Screenshot de Vimm's Lair" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>Vimm's Lair</h3>
+                        <p>Un repositorio de juegos retro para diversas plataformas.</p>
+                        <div class="tags">
+                            <span class="tag">Preservación</span>
+                            <span class="tag">Multi-plataforma</span>
+                        </div>
+                        <a href="https://vimm.net/" target="_blank" rel="noopener noreferrer" class="btn neon-btn">Visitar</a>
+                    </div>
+                </article>
+                
+                <!-- ROM Repository 3 -->
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/cdromance.jpg" alt="Screenshot de CDRomance" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>CDRomance</h3>
+                        <p>Biblioteca de juegos clásicos para consolas retro.</p>
+                        <div class="tags">
+                            <span class="tag">CD-ROM</span>
+                            <span class="tag">Iso</span>
+                        </div>
+                        <a href="https://cdromance.com/" target="_blank" rel="noopener noreferrer" class="btn neon-btn">Visitar</a>
+                    </div>
+                </article>
+                
+                <!-- ROM Repository 4 -->
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/romspedia.jpg" alt="Screenshot de RomsPedia" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>RomsPedia</h3>
+                        <p>Colección de ROMs para varios sistemas retro.</p>
+                        <div class="tags">
+                            <span class="tag">Multi-sistema</span>
+                            <span class="tag">Catalogado</span>
+                        </div>
+                        <a href="https://romspedia.com/" target="_blank" rel="noopener noreferrer" class="btn neon-btn">Visitar</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Recursos adicionales - Nueva sección -->
+        <section id="resources" class="section">
+            <div class="section-header">
+                <h2 class="neon-text">Recursos Adicionales</h2>
+                <p class="section-description">Herramientas y guías para la emulación retro</p>
+            </div>
+            <div class="resources-container">
+                <div class="resources-grid">
+                    <article class="resource-card">
+                        <i class="fas fa-book fa-3x" aria-hidden="true"></i>
+                        <h3>Guías de configuración</h3>
+                        <p>Tutoriales detallados para configurar tus emuladores favoritos</p>
+                        <a href="#" class="resource-link">Ver guías</a>
+                    </article>
+                    <article class="resource-card">
+                        <i class="fas fa-gamepad fa-3x" aria-hidden="true"></i>
+                        <h3>Configuración de mandos</h3>
+                        <p>Aprende a configurar diferentes controladores para emulación</p>
+                        <a href="#" class="resource-link">Ver tutoriales</a>
+                    </article>
+                    <article class="resource-card">
+                        <i class="fas fa-download fa-3x" aria-hidden="true"></i>
+                        <h3>BIOS necesarias</h3>
+                        <p>Información sobre archivos BIOS requeridos para diferentes emuladores</p>
+                        <a href="#" class="resource-link">Más información</a>
+                    </article>
+                    <article class="resource-card">
+                        <i class="fas fa-chart-line fa-3x" aria-hidden="true"></i>
+                        <h3>Optimización</h3>
+                        <p>Consejos para mejorar el rendimiento de tus emuladores</p>
+                        <a href="#" class="resource-link">Ver consejos</a>
+                    </article>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="contact" id="contacto">
-        <div class="container">
-            <h2>Contacta con nosotros</h2>
-            <form class="contact-form" id="contact-form">
-                <div class="form-group">
-                    <label for="name">Nombre</label>
-                    <input type="text" id="name" class="form-control" required>
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="section-header">
+                <h2 class="neon-text">Acerca de RetroHub</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="img/retro-gaming.jpg" alt="Colección de consolas retro" loading="lazy">
                 </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" class="form-control" required>
+                <div class="about-text">
+                    <p>RetroHub es una plataforma que sirve como punto central para los amantes de los videojuegos retro. Aquí encontrarás enlaces directos a los emuladores más populares y repositorios confiables de ROMs.</p>
+                    <p>Nuestro objetivo es facilitar el acceso a la preservación de los juegos clásicos y mantener viva la historia de los videojuegos.</p>
+                    <p>Este sitio es solo informativo y no aloja ningún contenido protegido por derechos de autor. Todos los enlaces dirigen a sitios oficiales o repositorios de preservación.</p>
+                    
+                    <details class="faq-item">
+                        <summary>¿Qué es un emulador?</summary>
+                        <p>Un emulador es un software que permite a una computadora imitar el funcionamiento de otra plataforma, como una consola de videojuegos. Esto permite ejecutar juegos de estas consolas en tu PC u otros dispositivos.</p>
+                    </details>
+                    
+                    <details class="faq-item">
+                        <summary>¿Es legal usar emuladores?</summary>
+                        <p>Los emuladores en sí mismos son legales en la mayoría de los países. Sin embargo, la descarga de ROMs de juegos que no poseas físicamente puede violar las leyes de copyright. Te recomendamos utilizar solo ROMs de juegos que poseas o que estén en dominio público.</p>
+                    </details>
+                    
+                    <details class="faq-item">
+                        <summary>¿Cómo empiezo con la emulación?</summary>
+                        <p>Comienza descargando un emulador para la plataforma que te interese, configura tus controles, y luego consigue ROMs de juegos que poseas físicamente. Visita nuestra sección de guías para más información detallada.</p>
+                    </details>
                 </div>
-                <div class="form-group">
-                    <label for="message">Mensaje</label>
-                    <textarea id="message" class="form-control" rows="5" required></textarea>
-                </div>
-                <button type="submit" class="cta-button">Enviar Mensaje</button>
-            </form>
-        </div>
-    </section>
+            </div>
+        </section>
 
+        <!-- Contacto - Nueva sección -->
+        <section id="contact" class="section">
+            <div class="section-header">
+                <h2 class="neon-text">Contacto</h2>
+                <p class="section-description">¿Tienes preguntas o sugerencias? ¡Escríbenos!</p>
+            </div>
+            <div class="contact-container">
+                <form id="contact-form" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Asunto</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Selecciona un asunto</option>
+                            <option value="question">Pregunta general</option>
+                            <option value="suggestion">Sugerencia</option>
+                            <option value="report">Reportar un problema</option>
+                            <option value="other">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Mensaje</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn neon-btn submit-btn">Enviar mensaje</button>
+                    </div>
+                </form>
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                        <p>contacto@retrohub.com</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-discord" aria-hidden="true"></i>
+                        <p>Únete a nuestro Discord</p>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter - Nueva sección -->
+        <section id="newsletter" class="section newsletter-section">
+            <div class="newsletter-container">
+                <div class="newsletter-content">
+                    <h2 class="neon-text">Suscríbete a nuestro boletín</h2>
+                    <p>Recibe las últimas noticias sobre emulación, nuevos lanzamientos y tutoriales directamente en tu correo.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Tu correo electrónico" required aria-label="Tu correo electrónico">
+                        <button type="submit" class="btn neon-btn">Suscribirse</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
     <footer>
-        <div class="container">
-            <p>&copy; 2025 MiSitioWeb. Todos los derechos reservados.</p>
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>RetroHub</h3>
+                    <p>Tu hub definitivo de emulación retro desde 2025.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Enlaces rápidos</h3>
+                    <ul>
+                        <li><a href="#home">Inicio</a></li>
+                        <li><a href="#emulators">Emuladores</a></li>
+                        <li><a href="#roms">ROMs</a></li>
+                        <li><a href="#resources">Recursos</a></li>
+                        <li><a href="#about">Acerca de</a></li>
+                        <li><a href="#contact">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Política de privacidad</a></li>
+                        <li><a href="#">Términos de uso</a></li>
+                        <li><a href="#">Aviso legal</a></li>
+                        <li><a href="#">Política de cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 RetroHub - Todos los derechos reservados</p>
+            </div>
+            <div class="disclaimer">
+                <p>Este sitio es puramente informativo. No alojamos ni distribuimos contenido protegido por derechos de autor.</p>
+            </div>
         </div>
     </footer>
 
-    <script>
-        // Selección de elementos
-        const hamburger = document.getElementById('hamburger');
-        const nav = document.getElementById('main-nav');
-        const menuOverlay = document.getElementById('menu-overlay');
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
-        const contactForm = document.getElementById('contact-form');
-        const prevButton = document.querySelector('.carousel-button.prev');
-        const nextButton = document.querySelector('.carousel-button.next');
-        const slides = document.querySelectorAll('.testimonial-slide');
-        
-        // Control del menú hamburguesa
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            nav.classList.toggle('active');
-            menuOverlay.classList.toggle('active');
-            // Prevenir scroll cuando el menú está abierto
-            document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
-        });
-        
-        // Cerrar el menú al hacer clic en el overlay
-        menuOverlay.addEventListener('click', closeMenu);
-        
-        // Cerrar el menú al hacer clic en un enlace
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', closeMenu);
-        });
-        
-        // Función para cerrar el menú - Mejora: Refactorización para evitar código repetido
-        function closeMenu() {
-            hamburger.classList.remove('active');
-            nav.classList.remove('active');
-            menuOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        
-        // Modo oscuro
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            themeToggle.textContent = body.classList.contains('dark-mode') ? '☀️' : '🌙';
-            // Mejora: Guardar preferencia en localStorage
-            localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
-        });
-        
-        // Mejora: Cargar preferencia de tema guardada
-        if(localStorage.getItem('darkMode') === 'true') {
-            body.classList.add('dark-mode');
-            themeToggle.textContent = '☀️';
-        }
-        
-        // Carrusel de testimonios
-        let currentSlide = 0;
-        let slideInterval; // Mejora: Variable para controlar el intervalo
-        
-        function showSlide(index) {
-            slides.forEach(slide => slide.classList.remove('active'));
-            
-            if (index < 0) {
-                currentSlide = slides.length - 1;
-            } else if (index >= slides.length) {
-                currentSlide = 0;
-            } else {
-                currentSlide = index;
-            }
-            
-            slides[currentSlide].classList.add('active');
-        }
-        
-        prevButton.addEventListener('click', () => {
-            showSlide(currentSlide - 1);
-            resetInterval(); // Mejora: Reiniciar intervalo al hacer clic manual
-        });
-        
-        nextButton.addEventListener('click', () => {
-            showSlide(currentSlide + 1);
-            resetInterval(); // Mejora: Reiniciar intervalo al hacer clic manual
-        });
-        
-        // Mejora: Función para reiniciar el intervalo
-        function resetInterval() {
-            clearInterval(slideInterval);
-            startInterval();
-        }
-        
-        // Mejora: Función para iniciar el intervalo
-        function startInterval() {
-            slideInterval = setInterval(() => {
-                showSlide(currentSlide + 1);
-            }, 5000);
-        }
-        
-        // Iniciar el carrusel automático
-        startInterval();
-        
-        // Manejo del formulario de contacto
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('name').value.trim(); // Mejora: trim para quitar espacios
-            const email = document.getElementById('email').value.trim();
-            const message = document.getElementById('message').value.trim();
-            
-            if (name && email && message) {
-                // Aquí normalmente enviarías los datos a un servidor
-                alert(`Gracias ${name}! Tu mensaje ha sido enviado correctamente.`);
-                contactForm.reset();
-            } else {
-                alert('Por favor completa todos los campos.');
-            }
-        });
-        
-        // Mejora: Scroll suave para los enlaces del menú
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 60, // Ajuste para el header
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    </script>
+    <!-- Back to top button -->
+    <button id="back-to-top" aria-label="Volver arriba">
+        <i class="fas fa-chevron-up" aria-hidden="true"></i>
+    </button>
+
+    <!-- Cookie consent banner -->
+    <div class="cookie-banner" id="cookie-banner">
+        <div class="cookie-content">
+            <p>Este sitio utiliza cookies para mejorar tu experiencia. Al continuar navegando, aceptas nuestro uso de cookies.</p>
+            <div class="cookie-buttons">
+                <button class="btn cookie-btn" id="accept-cookies">Aceptar</button>
+                <button class="btn cookie-btn" id="cookie-settings">Configurar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
 </body>
 </html>
